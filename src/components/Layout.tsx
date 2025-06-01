@@ -1,5 +1,5 @@
 import { type ReactNode } from 'react';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
 const Layout = ({ children }: { children: ReactNode }) => {
   const basePath = import.meta.env.VITE_BASE_PATH;
@@ -10,8 +10,28 @@ const Layout = ({ children }: { children: ReactNode }) => {
       <header className="bg-white shadow p-4 flex flex-row justify-between">
         <h2 className="font-bold">Github Repo Explorer</h2>
         <nav className="flex gap-4">
-          <Link to={basePath}>Home</Link>
-          <Link to={basePath + "about"}>About</Link>
+          <NavLink
+            className={({ isActive }) => 
+              [
+                "text-gray-700",
+                isActive ? "font-bold text-blue-600" : null
+              ].filter(Boolean).join(" ")
+            }
+            to={basePath}
+          >
+            Home
+          </NavLink>
+          <NavLink
+            className={({ isActive }) => 
+              [
+                "text-gray-700",
+                isActive ? "font-bold text-blue-600" : null
+              ].filter(Boolean).join(" ")
+            }
+            to={basePath + "about"}
+          >
+            About
+          </NavLink>
         </nav>
       </header>
       <main className="p-4">{children}</main>
