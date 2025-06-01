@@ -50,7 +50,7 @@ const Home = () => {
 
   return (
     <div>
-      <form className="w-[500px]">
+      <form>
         <input
           onChange={event => setSearchQuery(event.target.value)}
           type="text"

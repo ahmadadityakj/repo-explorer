@@ -6,7 +6,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
 
   return (
     <div className="w-full">
-    <div className="flex flex-col w-full max-w-screen-md mx-auto bg-white text-gray-700 min-h-screen">
+    <div className="flex flex-col w-full mx-auto bg-white text-gray-700 min-h-screen">
       <header className="bg-white shadow p-4 flex flex-row justify-between">
         <h2 className="font-bold">Github Repo Explorer</h2>
         <nav className="flex gap-4">
