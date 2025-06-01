@@ -12,7 +12,7 @@ Demo link are here :
   ```js
     npm install
   ```
-- copy file .env.example and rename .env
+- copy file .env.example and rename to .env
 - setup your .env
 - run the project
   ```js
