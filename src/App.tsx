@@ -4,10 +4,13 @@ import Home from './pages/Home';
 import Layout from './components/Layout';
 
 const App = () => {
+  const basePath = import.meta.env.VITE_BASE_PATH;
+
   return (
     <Layout>
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path={basePath} element={<Home />} />
+        <Route path={basePath + 'about'} element={<Home />} />
       </Routes>
     </Layout>
   );
