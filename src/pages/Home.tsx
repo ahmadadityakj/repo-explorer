@@ -1,39 +1,76 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Accordion from "../components/Accordion";
-import GithubService, { type GithubUserRepos, type GithubUsers } from "../services/GithubService";
+import GithubService, { type GithubUsers } from "../services/GithubService";
 import { useQuery } from "@tanstack/react-query";
 import { StarIcon } from "@heroicons/react/16/solid";
+import UserListLoader from "../components/UserListLoader";
+import RepoListLoader from "../components/RepoListLoader";
 
 const UserRepoList = ({ user }: { user: GithubUsers }) => {
-  const [userRepos, setUserRepos] = useState<GithubUserRepos[]>([]);
+  const [userId, setUserId] = useState('')
+
+  const { data, isLoading, refetch, isFetched, isError } = useQuery({
+    queryKey: ['user-repolist', userId],
+    queryFn: async () => {
+      return await GithubService.getUserRepos(userId);
+    },
+    enabled: false,
+  });
 
   const fetchUserRepos = async(username: string) => {
-    const data = await GithubService.getUserRepos(username);
-
-    setUserRepos(data);
+    setUserId(username);
   }
 
+  useEffect(() => {
+    if (userId) {
+      refetch();
+    }
+  }, [userId]);
+
   return (
-    <Accordion
-      title={user?.login}
-      key={`user-${user?.id}`}
-      onExpand={() => fetchUserRepos(user?.login)}
-    >
-      {userRepos?.map?.(repo => (
-        <div className="flex flex-row justify-between p-2 bg-gray-300 mb-2">
-          <div className="flex flex-col">
-            <div className="font-bold text-[18px] mb-2">{repo?.name}</div>
-            <div>{repo?.description}</div>
+    <>
+      <Accordion
+        title={user?.login}
+        key={`user-${user?.id}`}
+        onExpand={() => fetchUserRepos(user?.login)}
+      >
+        {isLoading && (
+          <div className="bg-gray-300">
+            <RepoListLoader />
           </div>
-          <div className="ml-4 flex flex-row">
-            <div>
-              {repo?.stargazers_count}
-            </div>
-            <StarIcon className="size-5 ml-2" />
-          </div>
-        </div>
-      ))}
-    </Accordion>
+        )}
+        {isFetched && (
+          <>
+            {!isError ? (
+              <>
+                {data?.length ? (
+                  <>
+                    {data?.map?.(repo => (
+                      <div key={`repo-${repo?.name}`} className="flex flex-row justify-between p-2 bg-gray-300 mb-2">
+                        <div className="flex flex-col">
+                          <div className="font-bold text-[18px] mb-2">{repo?.name}</div>
+                          <div>{repo?.description}</div>
+                        </div>
+                        <div className="ml-4 flex flex-row">
+                          <div>
+                            {repo?.stargazers_count}
+                          </div>
+                          <StarIcon className="size-5 ml-2" />
+                        </div>
+                      </div>
+                    ))}
+                  </>
+                ) : (
+                  <div>No repository found</div>
+                )}
+              </>
+            ) : (
+              <div>Fetching data error, please try again later!</div>
+            )}
+          </>
+        )}
+      </Accordion>
+    </>
   )
 }
 
@@ -84,6 +121,11 @@ const Home = () => {
         </div>
       </form>
       <div className="flex flex-col w-full mt-4">
+        {isLoading && (
+          <div className="bg-gray-300">
+            <UserListLoader />
+          </div>
+        )}
         {isFetched && (
           <>
             {!isError ? (
@@ -92,7 +134,7 @@ const Home = () => {
                   <>
                     <div className="mb-4">{`Showing users for "${searchQuery}"`}</div>
                     {data?.items?.map(user => (
-                      <UserRepoList user={user} />
+                      <UserRepoList key={`list-${user?.id}`} user={user} />
                     ))}
                   </>
                 ) : (
