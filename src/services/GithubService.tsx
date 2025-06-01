@@ -4,6 +4,7 @@ const apiClient = axios.create({
   baseURL: import.meta.env.VITE_GITHUB_API,
   headers: {
     "Content-type": "application/json",
+    Authorization: "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"
   },
 });
 
