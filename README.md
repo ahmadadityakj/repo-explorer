@@ -2,7 +2,7 @@
 
 This website is use to search github user by username and see all list of repositories 
 
-Demo link are here :
+Demo link is here :
 
 - [Github Repo Explorer](https://ahmadadityakj.github.io/repo-explorer/) 
 ## How to setup this project on your local
